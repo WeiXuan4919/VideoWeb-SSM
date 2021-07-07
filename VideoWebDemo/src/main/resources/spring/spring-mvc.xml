@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+    <!--开启包扫描-->
+    <mvc:annotation-driven/>
+    <mvc:resources mapping="/css/**" location="/css/"/>
+    <mvc:resources mapping="/images/**" location="/images/"/>
+    <mvc:resources mapping="/js/**" location="/js/"/>
+    <mvc:resources mapping="/font/**" location="/font/"/>
+    <context:component-scan base-package="cn.wxniubility.video.controller"/>
+    <!-- 配置视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 配置视图的公共目录路径 -->
+        <property name="prefix" value="/jsp/"/>
+        <!-- 配置视图的扩展名称 -->
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <!-- 配置拦截器 -->
+<!--    <mvc:interceptors>-->
+<!--        <mvc:interceptor>-->
+<!--            <mvc:mapping path="/*"/>-->
+<!--            <mvc:exclude-mapping path="/css/*"/>-->
+<!--            <mvc:exclude-mapping path="/js/*"/>-->
+<!--            <mvc:exclude-mapping path="/images/*"/>-->
+<!--            <mvc:exclude-mapping path="/calendar/*"/>-->
+<!--            <mvc:exclude-mapping path="/calendar/*"/>-->
+<!--            <mvc:exclude-mapping path="/login.do"/>-->
+<!--            <bean class="cn.smbms.filter.SysFilter"/>-->
+<!--        </mvc:interceptor>-->
+<!--    </mvc:interceptors>-->
+    <!--配置文件上传解析器
+  主要的作用是  把上传的文件的字节流 封装到一个对象中
+  内容:
+  1. 文件名
+  2. 文件的具体的内容
+  bean  必须配置id 而且 id 的名字不能便  常量 multipartResolver
+  -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--上传图片大小限制  字节  5MB-->
+        <property name="maxUploadSize" value="5242880"/>
+        <!--给上传图片的组件 配置一个缓冲区 4KB-->
+        <property name="maxInMemorySize" value="4096"/>
+        <!--图片编码-->
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <!-- 处理请求返回json字符串的乱码问题 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 注解请求映射
+            默认是ISO-88859-1，避免乱码这里设置为UTF-8 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/html;charset=UTF-8" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+</beans>
